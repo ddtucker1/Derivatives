@@ -93,6 +93,49 @@ describe('parsePutChainText', () => {
     expect(puts[2].strike).toBe(140)
   })
 
+  it('parses call | strike | put chains using middle strike and last put price', () => {
+    resetOptionIds()
+    const text = `
+      Calls  Strike  Puts
+      12.50  150.00  2.15
+      9.80   145.00  1.40
+      7.10   140.00  0.85
+    `
+    const puts = parsePutChainText(text)
+    expect(puts).toHaveLength(3)
+    expect(puts.map((p) => p.strike)).toEqual([150, 145, 140])
+    expect(puts[0].premium).toBe(2.15)
+    expect(puts[1].premium).toBe(1.4)
+    expect(puts[2].premium).toBe(0.85)
+  })
+
+  it('does not treat call prices as strikes', () => {
+    resetOptionIds()
+    // Without the fix, first number (12.50) would be read as the strike
+    const puts = parsePutChainText(`
+      Call  Strike  Put
+      12.50  150.00  2.15
+    `)
+    expect(puts).toHaveLength(1)
+    expect(puts[0].strike).toBe(150)
+    expect(puts[0].premium).toBe(2.15)
+  })
+
+  it('uses the last put column when the put side has multiple prices', () => {
+    resetOptionIds()
+    const text = `
+      Bid Ask Strike Bid Ask Last
+      4.80 5.20 150.00 2.10 2.20 2.15
+      3.10 3.40 145.00 1.35 1.45 1.40
+    `
+    const puts = parsePutChainText(text)
+    expect(puts).toHaveLength(2)
+    expect(puts[0].strike).toBe(150)
+    expect(puts[0].premium).toBe(2.15)
+    expect(puts[1].strike).toBe(145)
+    expect(puts[1].premium).toBe(1.4)
+  })
+
   it('handles dollar signs and commas', () => {
     resetOptionIds()
     const puts = parsePutChainText('$1,200.00  $12.50  $13.00')
