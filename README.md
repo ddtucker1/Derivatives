@@ -16,7 +16,10 @@ A small web app for **cash-secured short puts**. Enter money at risk and desired
 | Cash at risk (collateral) | `strike × 100 × contracts` |
 | Net if assigned | `(strike − premium) × 100 × contracts` |
 
-Sell premium defaults to the **bid** (what you can likely receive when selling).
+Screenshots are read as either:
+
+- **Put-only table** (`Strike`, `Bid`, `Ask`, …) — sell premium defaults to the **bid**
+- **Full chain** (`Calls` | `Strike` | `Puts`) — strike is the **middle** column; put premium is the **last** column
 
 The optimizer scores every valid (strike, contract count) pair by how close income and cash-at-risk are to your targets, with a penalty for exceeding max risk.
 

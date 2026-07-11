@@ -33,7 +33,7 @@ export function ScreenshotUpload({ onParsed, onCleared }: Props) {
       onParsed(puts)
       if (puts.length === 0) {
         setError(
-          'Could not read put prices from that image. Try a clearer screenshot of the options chain.',
+          'Could not read put prices from that image. Use a clear screenshot with Strike in the middle column and put prices in the last column.',
         )
       }
     } catch (err) {

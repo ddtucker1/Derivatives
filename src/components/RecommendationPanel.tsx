@@ -25,8 +25,8 @@ export function RecommendationPanel({
       <div className="results-panel results-empty">
         <h2>Closest fit</h2>
         <p>
-          No matching put sale found from that screenshot. Check that the image shows strike and
-          premium columns clearly.
+          No matching put sale found from that screenshot. Check that the image shows a Strike
+          column and put prices (last column on a full calls/strike/puts chain).
         </p>
       </div>
     )
