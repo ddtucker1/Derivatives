@@ -1,13 +1,12 @@
 # Put Ledger
 
-A small web app for **cash-secured short puts**. Upload (or paste) a put options chain for one stock and expiration, enter how much premium income you want and how much cash you are willing to put at risk, and the app recommends the strike and number of contracts that come closest to both targets.
+A small web app for **cash-secured short puts**. Enter money at risk and desired income, upload a picture of current options prices, and the app finds the closest put sale.
 
 ## How it works
 
-1. Enter **ticker**, **expiration**, **income goal**, and **max cash at risk**.
-2. Upload a screenshot of put prices, or paste chain text / enter rows manually.
-3. Review the editable put table (OCR is a starting point — fix bids/premiums as needed).
-4. Read the **best match**: sell *N* puts at strike *K*.
+1. Enter **money at risk** and **desired income**.
+2. Upload a screenshot of current put options prices.
+3. Once all three are filled, read the **closest fit**: sell *N* puts at strike *K*.
 
 ### Math
 
@@ -38,5 +37,5 @@ npm run lint    # oxlint
 
 ## Notes
 
-- OCR (Tesseract.js) works best on clear, high-contrast chain screenshots. Always verify extracted numbers.
+- OCR (Tesseract.js) works best on clear, high-contrast chain screenshots.
 - This tool does not place trades and is not investment advice.

@@ -33,8 +33,3 @@ export interface PutSaleRecommendation {
   incomeGap: number
   riskGap: number
 }
-
-export interface ChainMeta {
-  symbol: string
-  expiration: string
-}
