@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
-import { extractTextFromImage } from '../lib/ocr'
-import { parsePutChainText } from '../lib/parseChain'
+import { parseSpreadsheetFile, SPREADSHEET_ACCEPT } from '../lib/parseSpreadsheet'
 import type { PutOption } from '../lib/types'
 
 interface Props {
@@ -8,36 +7,32 @@ interface Props {
   onCleared?: () => void
 }
 
-export function ScreenshotUpload({ onParsed, onCleared }: Props) {
+export function SpreadsheetUpload({ onParsed, onCleared }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const [preview, setPreview] = useState<string | null>(null)
+  const [fileName, setFileName] = useState<string | null>(null)
+  const [rowCount, setRowCount] = useState(0)
   const [busy, setBusy] = useState(false)
-  const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
   async function handleFile(file: File | undefined) {
     if (!file) return
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload an image file (PNG, JPG, etc.).')
-      return
-    }
 
     setError(null)
     setBusy(true)
-    setProgress(0)
-    setPreview(URL.createObjectURL(file))
+    setFileName(file.name)
 
     try {
-      const text = await extractTextFromImage(file, setProgress)
-      const puts = parsePutChainText(text)
+      const puts = await parseSpreadsheetFile(file)
       onParsed(puts)
+      setRowCount(puts.length)
       if (puts.length === 0) {
         setError(
-          'Could not read put prices from that image. Use a clear screenshot with Strike in the middle column and put prices in the last column.',
+          'Could not find put prices in that spreadsheet. Include a Strike column and Bid, Ask, Last, or Put price columns.',
         )
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'OCR failed')
+      setError(err instanceof Error ? err.message : 'Could not read spreadsheet')
+      setRowCount(0)
       onCleared?.()
     } finally {
       setBusy(false)
@@ -56,16 +51,25 @@ export function ScreenshotUpload({ onParsed, onCleared }: Props) {
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept={SPREADSHEET_ACCEPT}
         className="sr-only"
         onChange={(e) => void handleFile(e.target.files?.[0])}
       />
-      {preview ? (
-        <img src={preview} alt="Uploaded options prices screenshot" className="preview" />
+      {fileName ? (
+        <div className="dropzone-copy">
+          <strong>{fileName}</strong>
+          <span>
+            {busy
+              ? 'Reading spreadsheet…'
+              : rowCount > 0
+                ? `${rowCount} put strike${rowCount === 1 ? '' : 's'} loaded`
+                : 'No put rows found'}
+          </span>
+        </div>
       ) : (
         <div className="dropzone-copy">
           <strong>Current options prices</strong>
-          <span>Drop a screenshot or choose a file</span>
+          <span>Drop a spreadsheet (.csv or .xlsx) or choose a file</span>
         </div>
       )}
       <button
@@ -74,7 +78,7 @@ export function ScreenshotUpload({ onParsed, onCleared }: Props) {
         disabled={busy}
         onClick={() => inputRef.current?.click()}
       >
-        {busy ? `Reading… ${progress}%` : preview ? 'Replace image' : 'Upload picture'}
+        {busy ? 'Reading…' : fileName ? 'Replace spreadsheet' : 'Upload spreadsheet'}
       </button>
       {error && (
         <p className="form-error" role="alert">
