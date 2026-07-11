@@ -138,16 +138,6 @@
   font-weight: 600;
 }
 
-.preview {
-  display: block;
-  width: min(100%, 420px);
-  max-height: 240px;
-  object-fit: contain;
-  border-radius: 8px;
-  border: 1px solid var(--line);
-  background: #000;
-}
-
 .btn-primary {
   border-radius: 999px;
   border: 1px solid transparent;

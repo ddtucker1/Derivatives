@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ScreenshotUpload } from './components/ScreenshotUpload'
+import { SpreadsheetUpload } from './components/SpreadsheetUpload'
 import { TargetsForm } from './components/TargetsForm'
 import { RecommendationPanel } from './components/RecommendationPanel'
 import { findBestPutSales } from './lib/optimizer'
@@ -8,7 +8,7 @@ import './App.css'
 
 function App() {
   const [puts, setPuts] = useState<PutOption[]>([])
-  const [hasImage, setHasImage] = useState(false)
+  const [hasSpreadsheet, setHasSpreadsheet] = useState(false)
   const [targetIncome, setTargetIncome] = useState('')
   const [maxRisk, setMaxRisk] = useState('')
 
@@ -20,7 +20,7 @@ function App() {
     incomeNum > 0 &&
     Number.isFinite(riskNum) &&
     riskNum > 0 &&
-    hasImage
+    hasSpreadsheet
 
   const recommendations = useMemo(
     () =>
@@ -39,8 +39,8 @@ function App() {
         <p className="brand">Put Ledger</p>
         <h1>Closest put sale</h1>
         <p className="lede">
-          Enter money at risk and desired income, upload current options prices, and get the
-          closest fit.
+          Enter money at risk and desired income, upload a spreadsheet of current options prices,
+          and get the closest fit.
         </p>
       </header>
 
@@ -53,14 +53,14 @@ function App() {
             onTargetIncome={setTargetIncome}
           />
 
-          <ScreenshotUpload
+          <SpreadsheetUpload
             onParsed={(parsed) => {
               setPuts(parsed)
-              setHasImage(true)
+              setHasSpreadsheet(true)
             }}
             onCleared={() => {
               setPuts([])
-              setHasImage(false)
+              setHasSpreadsheet(false)
             }}
           />
         </section>

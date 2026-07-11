@@ -1,11 +1,11 @@
 # Put Ledger
 
-A small web app for **cash-secured short puts**. Enter money at risk and desired income, upload a picture of current options prices, and the app finds the closest put sale.
+A small web app for **cash-secured short puts**. Enter money at risk and desired income, upload a spreadsheet of current options prices, and the app finds the closest put sale.
 
 ## How it works
 
 1. Enter **money at risk** and **desired income**.
-2. Upload a screenshot of current put options prices.
+2. Upload a spreadsheet (`.csv` or `.xlsx`) of current put options prices.
 3. Once all three are filled, read the **closest fit**: sell *N* puts at strike *K*.
 
 ### Math
@@ -16,10 +16,10 @@ A small web app for **cash-secured short puts**. Enter money at risk and desired
 | Cash at risk (collateral) | `strike × 100 × contracts` |
 | Net if assigned | `(strike − premium) × 100 × contracts` |
 
-Screenshots are read as either:
+Spreadsheets are read by column headers when present:
 
 - **Put-only table** (`Strike`, `Bid`, `Ask`, …) — sell premium defaults to the **bid**
-- **Full chain** (`Calls` | `Strike` | `Puts`) — strike is the **middle** column; put premium is the **last** column
+- **Full chain** (`Calls` | `Strike` | `Puts`) — uses the Strike column and put-side Bid / Last / Put price
 
 The optimizer scores every valid (strike, contract count) pair by how close income and cash-at-risk are to your targets, with a penalty for exceeding max risk.
 
@@ -40,5 +40,5 @@ npm run lint    # oxlint
 
 ## Notes
 
-- OCR (Tesseract.js) works best on clear, high-contrast chain screenshots.
+- Export your broker’s options chain to CSV or Excel so strikes and premiums stay exact (no OCR).
 - This tool does not place trades and is not investment advice.
