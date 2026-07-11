@@ -5,41 +5,42 @@ interface Props {
   recommendations: PutSaleRecommendation[]
   targetIncome: number
   maxRisk: number
-  symbol: string
-  expiration: string
+  ready: boolean
+  hasPuts: boolean
 }
 
 export function RecommendationPanel({
   recommendations,
   targetIncome,
   maxRisk,
-  symbol,
-  expiration,
+  ready,
+  hasPuts,
 }: Props) {
-  if (recommendations.length === 0) {
+  if (!ready) {
+    return null
+  }
+
+  if (!hasPuts || recommendations.length === 0) {
     return (
       <div className="results-panel results-empty">
-        <h2>Recommendation</h2>
+        <h2>Closest fit</h2>
         <p>
-          Enter your income and risk targets, and add at least one put with a strike and premium.
+          No matching put sale found from that screenshot. Check that the image shows strike and
+          premium columns clearly.
         </p>
       </div>
     )
   }
 
   const best = recommendations[0]
-  const label = [symbol.trim().toUpperCase(), expiration.trim()]
-    .filter(Boolean)
-    .join(' · ')
 
   return (
     <div className="results-panel">
       <div className="section-head">
-        <h2>Best match</h2>
+        <h2>Closest fit</h2>
         <p>
-          Closest cash-secured short put to {formatUsd(targetIncome)} income with about{' '}
-          {formatUsd(maxRisk)} at risk
-          {label ? ` for ${label}` : ''}.
+          Best cash-secured short put for {formatUsd(targetIncome)} income with about{' '}
+          {formatUsd(maxRisk)} at risk.
         </p>
       </div>
 

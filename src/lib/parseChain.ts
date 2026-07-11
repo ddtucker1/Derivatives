@@ -95,13 +95,3 @@ export function parsePutChainText(text: string): PutOption[] {
 function round2(n: number): number {
   return Math.round(n * 100) / 100
 }
-
-export function createEmptyPut(partial?: Partial<PutOption>): PutOption {
-  return {
-    id: nextOptionId(),
-    strike: partial?.strike ?? 0,
-    premium: partial?.premium ?? 0,
-    bid: partial?.bid,
-    ask: partial?.ask,
-  }
-}

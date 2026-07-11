@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { ScreenshotUpload } from './components/ScreenshotUpload'
-import { PutChainTable } from './components/PutChainTable'
 import { TargetsForm } from './components/TargetsForm'
 import { RecommendationPanel } from './components/RecommendationPanel'
 import { findBestPutSales } from './lib/optimizer'
@@ -9,70 +8,70 @@ import './App.css'
 
 function App() {
   const [puts, setPuts] = useState<PutOption[]>([])
-  const [symbol, setSymbol] = useState('')
-  const [expiration, setExpiration] = useState('')
-  const [targetIncome, setTargetIncome] = useState('500')
-  const [maxRisk, setMaxRisk] = useState('10000')
-  const [rawOcr, setRawOcr] = useState('')
+  const [hasImage, setHasImage] = useState(false)
+  const [targetIncome, setTargetIncome] = useState('')
+  const [maxRisk, setMaxRisk] = useState('')
 
   const incomeNum = Number(targetIncome)
   const riskNum = Number(maxRisk)
 
+  const inputsReady =
+    Number.isFinite(incomeNum) &&
+    incomeNum > 0 &&
+    Number.isFinite(riskNum) &&
+    riskNum > 0 &&
+    hasImage
+
   const recommendations = useMemo(
     () =>
-      findBestPutSales(puts, {
-        targetIncome: incomeNum,
-        maxRisk: riskNum,
-      }),
-    [puts, incomeNum, riskNum],
+      inputsReady
+        ? findBestPutSales(puts, {
+            targetIncome: incomeNum,
+            maxRisk: riskNum,
+          })
+        : [],
+    [puts, incomeNum, riskNum, inputsReady],
   )
 
   return (
     <div className="app-shell">
       <header className="brand-header">
         <p className="brand">Put Ledger</p>
-        <h1>Sell puts to a dollar target</h1>
+        <h1>Closest put sale</h1>
         <p className="lede">
-          Load a put chain screenshot, set the income you want and the cash you will risk, and get
-          the strike and contract count that come closest.
+          Enter money at risk and desired income, upload current options prices, and get the
+          closest fit.
         </p>
       </header>
 
       <main className="layout">
-        <TargetsForm
-          symbol={symbol}
-          expiration={expiration}
-          targetIncome={targetIncome}
-          maxRisk={maxRisk}
-          onSymbol={setSymbol}
-          onExpiration={setExpiration}
-          onTargetIncome={setTargetIncome}
-          onMaxRisk={setMaxRisk}
-        />
+        <section className="inputs-panel" aria-label="Trade inputs">
+          <TargetsForm
+            maxRisk={maxRisk}
+            targetIncome={targetIncome}
+            onMaxRisk={setMaxRisk}
+            onTargetIncome={setTargetIncome}
+          />
 
-        <ScreenshotUpload
-          onParsed={(parsed, text) => {
-            setPuts(parsed)
-            setRawOcr(text)
-          }}
-        />
-
-        <PutChainTable puts={puts} onChange={setPuts} />
+          <ScreenshotUpload
+            onParsed={(parsed) => {
+              setPuts(parsed)
+              setHasImage(true)
+            }}
+            onCleared={() => {
+              setPuts([])
+              setHasImage(false)
+            }}
+          />
+        </section>
 
         <RecommendationPanel
           recommendations={recommendations}
           targetIncome={incomeNum}
           maxRisk={riskNum}
-          symbol={symbol}
-          expiration={expiration}
+          ready={inputsReady}
+          hasPuts={puts.length > 0}
         />
-
-        {rawOcr && (
-          <details className="ocr-debug">
-            <summary>Raw OCR text</summary>
-            <pre>{rawOcr}</pre>
-          </details>
-        )}
       </main>
     </div>
   )

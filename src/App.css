@@ -1,14 +1,14 @@
 .app-shell {
   position: relative;
-  width: min(1100px, calc(100% - 2rem));
+  width: min(720px, calc(100% - 2rem));
   margin: 0 auto;
   padding: 2.5rem 0 4rem;
   animation: rise-in 0.7s ease-out both;
 }
 
 .brand-header {
-  margin-bottom: 2.25rem;
-  max-width: 40rem;
+  margin-bottom: 2rem;
+  max-width: 36rem;
 }
 
 .brand {
@@ -36,7 +36,7 @@
   color: var(--muted);
   font-size: 1.02rem;
   line-height: 1.55;
-  max-width: 36rem;
+  max-width: 34rem;
 }
 
 .layout {
@@ -44,16 +44,18 @@
   gap: 1.25rem;
 }
 
-.targets-panel,
-.upload-panel,
-.chain-table-wrap,
-.results-panel,
-.ocr-debug {
+.inputs-panel,
+.results-panel {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 1.25rem 1.35rem 1.4rem;
   backdrop-filter: blur(8px);
+}
+
+.inputs-panel {
+  display: grid;
+  gap: 1.15rem;
 }
 
 .section-head {
@@ -93,9 +95,7 @@
   color: var(--muted);
 }
 
-.field-grid input,
-.chain-table input,
-.paste-fallback textarea {
+.field-grid input {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -106,9 +106,7 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.field-grid input:focus,
-.chain-table input:focus,
-.paste-fallback textarea:focus {
+.field-grid input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(47, 214, 162, 0.15);
 }
@@ -150,20 +148,15 @@
   background: #000;
 }
 
-.btn-primary,
-.btn-secondary,
-.btn-ghost {
+.btn-primary {
   border-radius: 999px;
   border: 1px solid transparent;
   padding: 0.65rem 1.15rem;
   font-weight: 600;
   font-size: 0.92rem;
-  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
-}
-
-.btn-primary {
   background: var(--accent);
   color: #042018;
+  transition: transform 0.15s ease, background 0.2s ease;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -176,90 +169,10 @@
   cursor: wait;
 }
 
-.btn-secondary {
-  margin-top: 0.85rem;
-  background: transparent;
-  border-color: var(--line);
-  color: var(--text);
-}
-
-.btn-secondary:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.btn-ghost {
-  padding: 0.35rem 0.6rem;
-  background: transparent;
-  border-color: transparent;
-  color: var(--muted);
-  font-size: 0.8rem;
-}
-
-.btn-ghost:hover {
-  color: var(--danger);
-}
-
 .form-error {
-  margin: 0.85rem 0 0;
+  margin: 0;
   color: var(--warn);
   font-size: 0.9rem;
-}
-
-.paste-fallback {
-  margin-top: 1rem;
-}
-
-.paste-fallback summary {
-  cursor: pointer;
-  color: var(--muted);
-  margin-bottom: 0.65rem;
-}
-
-.paste-fallback textarea {
-  resize: vertical;
-  min-height: 7rem;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  margin-bottom: 0.65rem;
-}
-
-.table-scroll {
-  overflow-x: auto;
-  margin-bottom: 0.25rem;
-}
-
-.chain-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.92rem;
-}
-
-.chain-table th {
-  text-align: left;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  font-weight: 500;
-  padding: 0.4rem 0.35rem 0.65rem;
-  border-bottom: 1px solid var(--line);
-}
-
-.chain-table td {
-  padding: 0.35rem;
-  vertical-align: middle;
-}
-
-.chain-table input {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  padding: 0.5rem 0.55rem;
-}
-
-.empty-row {
-  color: var(--muted);
-  padding: 1rem 0.35rem !important;
 }
 
 .best-trade {
@@ -365,24 +278,6 @@
   color: var(--muted);
 }
 
-.ocr-debug summary {
-  cursor: pointer;
-  color: var(--muted);
-}
-
-.ocr-debug pre {
-  margin: 0.75rem 0 0;
-  padding: 0.85rem;
-  overflow: auto;
-  max-height: 220px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.35);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.4;
-  white-space: pre-wrap;
-}
-
 @keyframes rise-in {
   from {
     opacity: 0;
@@ -416,7 +311,7 @@
 
 @media (max-width: 720px) {
   .app-shell {
-    width: min(100% - 1.25rem, 1100px);
+    width: min(100% - 1.25rem, 720px);
     padding-top: 1.5rem;
   }
 
@@ -437,8 +332,7 @@
     animation: none;
   }
 
-  .btn-primary,
-  .btn-secondary {
+  .btn-primary {
     transition: none;
   }
 }
